@@ -1,0 +1,13 @@
+name 'bkg-django'
+version '0.1.0'
+source 'https://github.com/bkg/puppet-django.git'
+author 'Brian Galey'
+license 'Apache License, Version 2.0'
+summary 'Django application stack'
+project_page 'https://github.com/bkg/puppet-django.git'
+
+dependency 'puppetlabs/apt', '1.2.x'
+dependency 'puppetlabs/nginx', '0.x'
+dependency 'puppetlabs/postgresql', '2.1.x'
+# Not available from the Forge
+# dependency 'puppetmodules/puppet-module-python', '0.x'
