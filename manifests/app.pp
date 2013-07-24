@@ -1,6 +1,6 @@
 define django::app (
   $vhostname,
-  $vhostroot = '/var/www/',
+  $vhostroot = '/var/www',
   $staticdir = 'static/public',
   $mediadir = 'media',
   $dbuser = undef,
@@ -20,10 +20,12 @@ define django::app (
     ensure => directory,
     owner => 'root',
     group => 'root',
-  }
+  } ->
+  file { $vhostdocroot:
+    ensure => directory,
+  } ->
   file { "$vhostdocroot/$name":
     ensure => directory,
-    require => File[$vhostroot],
   }
 
   nginx::resource::upstream {"${name}_app":
