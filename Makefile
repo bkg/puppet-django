@@ -18,3 +18,6 @@ $(prefix)/python:
 checkouts: $(prefix)/python
 
 build: depends checkouts
+
+check:
+	puppet parser --verbose validate $$(find . -name '*.pp')
