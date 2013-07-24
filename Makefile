@@ -1,7 +1,6 @@
 prefix ?= $(HOME)/.puppet/modules
-
+# Extract a list of dependencies with versions to install from the Forge.
 deps = $(shell awk '/^dependency/ {print $$2$$3}' Modulefile)
-repos = https://github.com/puppetmodules/puppet-module-python.git
 
 all: build
 
@@ -13,9 +12,14 @@ depends:
 	done
 
 $(prefix)/python:
-	git clone $(firstword $(repos)) $@
+	git clone https://github.com/puppetmodules/puppet-module-python.git $@
 
-checkouts: $(prefix)/python
+$(prefix)/nginx:
+	git clone https://github.com/jfryman/puppet-nginx.git $@ && \
+		git --git-dir=$@/.git checkout 17d1edaf74
+
+# Checkout git based dependencies.
+checkouts: $(prefix)/python $(prefix)/nginx
 
 build: depends checkouts
 

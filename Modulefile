@@ -7,7 +7,7 @@ summary 'Django application stack'
 project_page 'https://github.com/bkg/puppet-django.git'
 
 dependency 'puppetlabs/apt', '1.2.x'
-dependency 'puppetlabs/nginx', '0.x'
 dependency 'puppetlabs/postgresql', '2.1.x'
 # Not available from the Forge
 # dependency 'puppetmodules/puppet-module-python', '0.x'
+# dependency 'jfryman/nginx', '0.x'
