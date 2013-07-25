@@ -16,14 +16,11 @@ define django::app (
   }
   $vhostdocroot = "${vhostroot}/${vhostname}"
   $venvdir = "${vhostdocroot}/env"
-  file { $vhostroot:
-    ensure => directory,
-    owner => 'root',
-    group => 'root',
-  } ->
-  file { $vhostdocroot:
-    ensure => directory,
-  } ->
+  # Unfortunately there is currently no way to set separate ownership
+  # for app and venv subdirs while allowing the gunicorn daemon to run as an
+  # unprivileged user. Work around that here.
+  python::venv::isolate { $venvdir: } ->
+  exec { "chown root:root ${vhostdocroot}": } ->
   file { "$vhostdocroot/$name":
     ensure => directory,
   }
@@ -51,7 +48,6 @@ define django::app (
     vhost    => $vhostname,
   }
 
-  python::venv::isolate { $venvdir: }
   python::gunicorn::instance {$name:
     venv => $venvdir,
     src => "${vhostdocroot}/${name}",
