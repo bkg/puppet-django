@@ -22,7 +22,7 @@ anyway. Finer grained control can be achieved with:
 
     django::app { 'examplesite':
       vhostname => 'examplesite.com',
-      vhostroot => '/srv/www/',
+      vhostroot => '/srv/www',
       staticdir => 'static/public',
       mediadir => 'media',
       dbuser => 'exampleuser',
