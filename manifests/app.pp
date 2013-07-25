@@ -79,4 +79,5 @@ define django::app (
     auth_method => 'trust',
     order => '000',
   }
+  Class['::django'] -> Django::App[$name]
 }
