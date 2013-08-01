@@ -20,7 +20,7 @@ define django::app (
   # for app and venv subdirs while allowing the gunicorn daemon to run as an
   # unprivileged user. Work around that here.
   python::venv::isolate { $venvdir: } ->
-  exec { "chown root:root ${vhostdocroot}": } ->
+  exec { "/bin/sh chown root:root ${vhostdocroot}": } ->
   file { "$vhostdocroot/$name":
     ensure => directory,
   }
