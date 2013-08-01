@@ -15,8 +15,9 @@ $(prefix)/python:
 	git clone https://github.com/puppetmodules/puppet-module-python.git $@
 
 $(prefix)/nginx:
-	git clone https://github.com/jfryman/puppet-nginx.git $@ && \
-		git --git-dir=$@/.git checkout 17d1edaf74
+	git clone https://github.com/jfryman/puppet-nginx.git $@
+	        #&& \
+		# git --git-dir=$@/.git checkout 17d1edaf74
 
 # Checkout git based dependencies.
 checkouts: $(prefix)/python $(prefix)/nginx
