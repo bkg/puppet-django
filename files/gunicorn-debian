@@ -28,6 +28,14 @@ def main():
 
     options, args = parser.parse_args()
 
+    # Work around older gunicorn package init scripts which used positional
+    # arguments instead of flags.
+    if len(args) >= 3 and os.path.isdir(args[0]):
+        flags = zip(('--conf-dir', '--pid-dir', '--log-dir'), args)
+        args = args[len(flags):]
+        flags = [val for flag in flags for val in flag]
+        options, args = parser.parse_args(flags + args)
+
     try:
         logging.basicConfig(
             format='%(levelname).1s: %(message)s',
