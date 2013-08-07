@@ -55,6 +55,11 @@ define django::app (
     vhost => $vhostname,
   }
 
+  python::pip { 'gunicorn':
+    virtualenv  => $venvdir,
+    owner => $owner,
+    require => Python::Virtualenv[$venvdir],
+  } ->
   python::gunicorn { $name:
     ensure => $ensure,
     virtualenv => $venvdir,
@@ -62,11 +67,6 @@ define django::app (
     dir => "${vhostdocroot}/${name}",
     bind => "unix:/var/run/gunicorn/${name}.sock",
     template => 'django/gunicorn.erb',
-  }
-  python::pip { 'gunicorn':
-    virtualenv  => $venvdir,
-    owner => $owner,
-    require => Python::Virtualenv[$venvdir],
   }
   if $django {
     python::pip { 'django':
