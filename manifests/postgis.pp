@@ -18,6 +18,7 @@ class django::postgis {
       }
     }
   }
+  include postgresql::devel
   package { $pkgname:
     ensure => present,
   }
