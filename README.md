@@ -28,5 +28,4 @@ anyway. Finer grained control can be achieved with:
       dbuser => 'exampleuser',
       dbpass => 'md5d16f1d3e443f9fa954b3455d6cf56fdb',
       django => true,
-      gunicorn_workers => 9,
     }
