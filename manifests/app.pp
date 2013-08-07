@@ -18,9 +18,13 @@ define django::app (
   }
   $vhostdocroot = "${vhostroot}/${vhostname}"
   $venvdir = "${vhostdocroot}/env"
-  python::virtualenv { $venvdir:
-    owner => $owner,
-    group => $group,
+
+  # This runs mkdir -p as $owner so let it run as root and fix up ownership
+  # after the fact.
+  python::virtualenv { $venvdir: } ~>
+  exec { 'venv-perms':
+    command => "chown -R ${owner}:${group} ${vhostdocroot}",
+    unless => "test $(stat -c %U%G $venvdir) = ${owner}${group}",
   } ->
   file { "$vhostdocroot/$name":
     ensure => directory,
@@ -29,35 +33,35 @@ define django::app (
   }
 
   nginx::resource::upstream {"${name}_app":
-    ensure  => $ensure,
+    ensure => $ensure,
     members => [
       "unix:/var/run/gunicorn/${name}.sock",
     ],
   }
   nginx::resource::vhost {$vhostname:
     ensure => $ensure,
-    proxy  => "http://${name}_app",
+    proxy => "http://${name}_app",
   }
   nginx::resource::location {$vhostname:
-    ensure   => $ensure,
+    ensure => $ensure,
     location_alias => "${vhostdocroot}/${name}/${name}/${staticdir}/",
     location => '/static/',
-    vhost    => $vhostname,
+    vhost => $vhostname,
   }
   nginx::resource::location {"${vhostname}-media":
-    ensure   => $ensure,
+    ensure => $ensure,
     location_alias => "${vhostdocroot}/${name}/${name}/${mediadir}/",
     location => '/media/',
-    vhost    => $vhostname,
+    vhost => $vhostname,
   }
 
   python::gunicorn { $name:
     ensure => $ensure,
-    virtualenv  => $venvdir,
-    mode        => 'django',
-    dir         => "${vhostdocroot}/${name}",
-    bind        => "unix:/var/run/gunicorn/${name}.sock",
-    template    => 'django/gunicorn.erb',
+    virtualenv => $venvdir,
+    mode => 'django',
+    dir => "${vhostdocroot}/${name}",
+    bind => "unix:/var/run/gunicorn/${name}.sock",
+    template => 'django/gunicorn.erb',
   }
   python::pip { 'gunicorn':
     virtualenv  => $venvdir,
@@ -66,7 +70,7 @@ define django::app (
   }
   if $django {
     python::pip { 'django':
-      virtualenv  => $venvdir,
+      virtualenv => $venvdir,
       owner => $owner,
       require => Python::Virtualenv[$venvdir],
     }
