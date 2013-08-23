@@ -76,16 +76,12 @@ define django::app (
     }
   }
 
-  # Use the defaults, local ident access only for postgres superuser
-  include postgresql::server
   # Create the db and user
   postgresql::db {"$dbname":
     user => $dbusername,
     password => $dbpass,
   } ->
-  django::spatialdb {$dbname:
-    dbname => $dbname,
-  }
+  django::spatialdb {$dbname: dbname => $dbname}
   # Trust database connections over local sockets.
   postgresql::pg_hba_rule {"$dbname django app user":
     type => 'local',

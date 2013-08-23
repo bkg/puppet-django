@@ -26,6 +26,8 @@ class django (
     ensure => $ensure,
     mode => '0644',
   }
+  # Use the defaults, local ident access only for postgres superuser.
+  include postgresql::server
   if $geo {
     include django::postgis
   }
