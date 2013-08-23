@@ -22,7 +22,7 @@ define django::app (
   # This runs mkdir -p as $owner so let it run as root and fix up ownership
   # after the fact.
   python::virtualenv { $venvdir: } ~>
-  exec { 'venv-perms':
+  exec { "$vhostname-venv-perms":
     command => "chown -R ${owner}:${group} ${vhostdocroot}",
     unless => "test $(stat -c %U%G $venvdir) = ${owner}${group}",
   } ->
