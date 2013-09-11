@@ -1,5 +1,7 @@
 #!/usr/bin/env python
-
+# Init script helper originally from the Gunicorn Debian package, modified
+# slightly to support Debian init scripts across stable and testing package
+# versions.
 import os
 import re
 import imp
