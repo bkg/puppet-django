@@ -9,6 +9,7 @@ define django::app (
   $owner = 'root',
   $group = 'root',
   $django = false,
+  $geo = true,
 ) {
   $dbname = $name
   if $dbuser {
@@ -80,8 +81,10 @@ define django::app (
   postgresql::db {"$dbname":
     user => $dbusername,
     password => $dbpass,
-  } ->
-  django::spatialdb {$dbname: dbname => $dbname}
+  }
+  if $geo {
+    django::spatialdb {$dbname: dbname => $dbname}
+  }
   # Trust database connections over local sockets.
   postgresql::pg_hba_rule {"$dbname django app user":
     type => 'local',

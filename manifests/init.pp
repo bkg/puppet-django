@@ -1,7 +1,7 @@
 # Create a Django stack using Nginx, Gunicorn, and PostgreSQL with PostGIS.
 class django (
   $ensure = present,
-  $geo = true,
+  $postgis = true,
   $nginx_workers = $::processorcount,
 ) {
   $gunicorn_helper = '/usr/local/sbin/gunicorn-debian'
@@ -28,7 +28,7 @@ class django (
   }
   # Use the defaults, local ident access only for postgres superuser.
   include postgresql::server
-  if $geo {
+  if $postgis {
     include django::postgis
   }
 }
