@@ -73,7 +73,7 @@ define django::app (
     python::pip { 'django':
       virtualenv => $venvdir,
       owner => $owner,
-      require => Python::Virtualenv[$venvdir],
+      require => Python::Pip['gunicorn'],
     }
   }
 
