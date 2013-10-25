@@ -1,4 +1,5 @@
 prefix ?= $(HOME)/.puppet/modules
+manifests = $(wildcard manifests/*.pp)
 # Extract a list of dependencies with versions to install from the Forge.
 deps = $(shell awk '/^dependency/ {print $$2$$3}' Modulefile)
 
@@ -24,5 +25,10 @@ checkouts: $(prefix)/python $(prefix)/nginx
 build: depends checkouts
 
 check:
-	@puppet parser --verbose validate manifests/*.pp && \
+	@puppet parser --verbose validate $(manifests) && \
 		echo 'All manifests parsed without error.'
+
+lint:
+	@for f in $(manifests); do \
+		echo "\nLinting $$f ..." && bundle exec puppet-lint $$f; \
+	done
