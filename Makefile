@@ -24,4 +24,5 @@ checkouts: $(prefix)/python $(prefix)/nginx
 build: depends checkouts
 
 check:
-	puppet parser --verbose validate $$(find . -name '*.pp')
+	@puppet parser --verbose validate manifests/*.pp && \
+		echo 'All manifests parsed without error.'
