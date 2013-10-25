@@ -12,7 +12,7 @@ depends:
 	done
 
 $(prefix)/python:
-	git clone https://github.com/stankevich/puppet-python $@
+	git clone https://github.com/stankevich/puppet-python.git $@
 
 $(prefix)/nginx:
 	git clone https://github.com/jfryman/puppet-nginx.git $@ && \
