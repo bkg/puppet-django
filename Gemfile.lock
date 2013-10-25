@@ -1,0 +1,20 @@
+GEM
+  remote: https://rubygems.org/
+  specs:
+    facter (1.7.3)
+    hiera (1.2.1)
+      json_pure
+    json_pure (1.8.1)
+    puppet (3.3.1)
+      facter (~> 1.6)
+      hiera (~> 1.0)
+      rgen (~> 0.6.5)
+    puppet-lint (0.3.2)
+    rgen (0.6.6)
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  puppet
+  puppet-lint
