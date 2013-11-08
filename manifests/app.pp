@@ -56,9 +56,12 @@ define django::app (
     vhost => $vhostname,
   }
 
-  python::pip { 'gunicorn':
-    virtualenv  => $venvdir,
-    owner => $owner,
+  # Cannot use python::pip here due to the requirement for uniquely named
+  # resources and no available package name parameter for python::pip.
+  exec { "gunicorn-$name":
+    command => "${venvdir}/bin/pip install gunicorn",
+    creates => "${venvdir}/bin/gunicorn",
+    user => $owner,
     require => Python::Virtualenv[$venvdir],
   } ->
   python::gunicorn { $name:
@@ -70,10 +73,11 @@ define django::app (
     template => 'django/gunicorn.erb',
   }
   if $django {
-    python::pip { 'django':
-      virtualenv => $venvdir,
-      owner => $owner,
-      require => Python::Pip['gunicorn'],
+    exec { "django-$name":
+      command => "${venvdir}/bin/pip install django",
+      creates => "${venvdir}/bin/django-admin.py",
+      user => $owner,
+      require => Python::Virtualenv[$venvdir],
     }
   }
 

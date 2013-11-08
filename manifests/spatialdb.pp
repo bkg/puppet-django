@@ -8,15 +8,16 @@ define django::spatialdb ($dbname, $pguser='postgres') {
     psql -d <%= @dbname %> -f $POSTGIS_SQL_PATH/spatial_ref_sys.sql
   ')
   # Install postgis from packaged scripts when <2.0.
-  exec { 'install-postgis':
+  exec { "${dbname}-install-postgis":
     command => $cmd,
     unless => "${psql} 'select postgis_version();' || test -f /usr/share/postgresql/*/extension/postgis.control",
     user => $pguser,
     require => Postgresql::Db[$dbname],
   }
   # With PostGIS >= 2.0 we can take advantage of extension loading.
-  exec { "${psql} 'CREATE EXTENSION postgis;'":
-    onlyif => "test -f /usr/share/postgresql/*/extension/postgis.control && ! ${psql} 'select postgis_version();'",
+  exec { "${dbname}-create-postgis-extension":
+    command => "$psql 'CREATE EXTENSION postgis;'",
+    onlyif => "test -f /usr/share/postgresql/*/extension/postgis.control && ! $psql 'select postgis_version();'",
     user => $pguser,
     require => Postgresql::Db[$dbname],
   }
