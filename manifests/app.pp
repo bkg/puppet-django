@@ -62,7 +62,7 @@ define django::app (
     command => "${venvdir}/bin/pip install gunicorn",
     creates => "${venvdir}/bin/gunicorn",
     user => $owner,
-    require => Python::Virtualenv[$venvdir],
+    require => File["$vhostdocroot/$name"],
   } ->
   python::gunicorn { $name:
     ensure => $ensure,
@@ -77,7 +77,7 @@ define django::app (
       command => "${venvdir}/bin/pip install django",
       creates => "${venvdir}/bin/django-admin.py",
       user => $owner,
-      require => Python::Virtualenv[$venvdir],
+      require => File["$vhostdocroot/$name"],
     }
   }
 
