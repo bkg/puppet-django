@@ -1,3 +1,9 @@
+# An individual Django application comprised of a PostgreSQL database, Nginx
+# virtual host serving static files, and a Gunicorn WSGI daemon. PostGIS can
+# optionally be enabled/disabled (defaults to enabled) for the database. Django
+# will not be installed in the virtualenv by default since most applications
+# will specify the version needed in their requirements.txt.
+
 define django::app (
   $vhostname,
   $ensure = present,
@@ -12,10 +18,9 @@ define django::app (
   $geo = true,
 ) {
   $dbname = $name
-  if $dbuser {
-    $dbusername = $dbuser
-  } else {
-    $dbusername = regsubst($vhostname, '\.[a-z]{3}*$', '')
+  $dbusername = $dbuser ? {
+    undef => regsubst($vhostname, '\.[a-z]{3}*$', ''),
+    default => $dbuser
   }
   $vhostdocroot = "${vhostroot}/${vhostname}"
   $venvdir = "${vhostdocroot}/env"
