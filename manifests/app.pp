@@ -87,7 +87,7 @@ define django::app (
   }
 
   # Create the db and user
-  postgresql::db {"$dbname":
+  postgresql::server::db {"$dbname":
     user => $dbusername,
     password => $dbpass,
   }
@@ -95,7 +95,7 @@ define django::app (
     django::spatialdb {$dbname: dbname => $dbname}
   }
   # Trust database connections over local sockets.
-  postgresql::pg_hba_rule {"$dbname django app user":
+  postgresql::server::pg_hba_rule {"$dbname django app user":
     type => 'local',
     database => $dbname,
     user => $dbusername,

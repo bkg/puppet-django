@@ -19,6 +19,6 @@ class django::postgis {
     fail("Specify PostGIS package name when using $::operatingsystem.")
   }
   # We need postgres dev libs installed to compile psycopg2 in a virtualenv.
-  include postgresql::devel
+  include postgresql::lib::devel
   package { $postgis_name: ensure => present }
 }
