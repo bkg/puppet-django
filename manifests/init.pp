@@ -15,7 +15,9 @@ class django (
     owner => $owner,
     group => $group,
   }
-  class { 'nginx': worker_processes => $nginx_workers }
+  if !defined(Class['nginx']) {
+    class { 'nginx': worker_processes => $nginx_workers }
+  }
   class { 'python':
     dev => true,
     virtualenv => true,

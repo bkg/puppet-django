@@ -43,9 +43,11 @@ define django::app (
     group => $group,
   }
 
-  nginx::resource::vhost {$vhostname:
-    ensure => $ensure,
-    proxy => "http://${name}_app",
+  if !defined(Nginx::Resource::Vhost[$vhostname]) {
+    nginx::resource::vhost {$vhostname:
+      ensure => $ensure,
+      proxy => "http://${name}_app",
+    }
   }
   nginx::resource::location {"${vhostname}-static":
     ensure => $ensure,
