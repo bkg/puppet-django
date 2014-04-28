@@ -11,7 +11,7 @@ Install packages for PostgreSQL, PostGIS, Nginx, and Virtualenv:
     include django
 
 Add a new Django application base. This creates an Nginx vhost config, fresh virtualenv, and a default
-directory structure for deploying your application code:
+directory structure under /var/www for deploying your application code:
 
     django::app { 'examplesite': vhostname => 'examplesite.com' }
 
@@ -22,10 +22,9 @@ anyway. Finer grained control can be achieved with:
 
     django::app { 'examplesite':
       vhostname => 'examplesite.com',
-      vhostroot => '/srv/www',
-      staticdir => 'static/public',
-      mediadir => 'media',
-      dbuser => 'exampleuser',
-      dbpass => 'md5d16f1d3e443f9fa954b3455d6cf56fdb',
-      django => true,
+      staticdir => '/srv/http/examplesite.com/static/public',
+      mediadir  => '/srv/http/examplesite.com/media',
+      dbuser    => 'exampleuser',
+      dbpass    => 'md5d16f1d3e443f9fa954b3455d6cf56fdb',
+      django    => true,
     }
