@@ -14,6 +14,7 @@ define django::app (
   $owner = $django::owner,
   $group = $django::group,
   $pythonversion = $django::pythonversion,
+  $wsgiapp = "${name}.wsgi:application",
   $gunicorn_user = $django::gunicorn_user,
   $gunicorn_workers = $::processorcount * 2,
   $django = false,
@@ -85,7 +86,7 @@ define django::app (
   python::gunicorn { $name:
     ensure => $ensure,
     virtualenv => $venvdir,
-    mode => 'django',
+    mode => 'wsgi',
     dir => "${vhostdocroot}/${name}",
     bind => $socket,
     template => 'django/gunicorn.erb',

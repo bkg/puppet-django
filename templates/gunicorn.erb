@@ -1,14 +1,10 @@
 CONFIG = {
-<% if @mode == 'django' -%>
-  'mode': 'django',
-<% else -%>
   'mode': 'wsgi',
-<% end -%>
 <% if @virtualenv -%>
   'environment': {
-<% if @environment -%>
+  <% if @environment -%>
     'ENVIRONMENT': '<%= @environment %>',
-<% end -%>
+  <% end -%>
     'PYTHONPATH': '<%= @virtualenv %>'
   },
 <% end -%>
@@ -31,8 +27,6 @@ CONFIG = {
 <% end -%>
     '--workers=<%= @processorcount.to_i * 2 + 1 %>',
     '--timeout=30',
-<% if @mode != 'django' -%>
-    'app:app',
-<% end -%>
+    '<%= @wsgiapp %>',
   ),
 }
