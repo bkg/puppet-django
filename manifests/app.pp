@@ -19,13 +19,13 @@ define django::app (
   $wsgiapp = "${name}.wsgi:application",
   $gunicorn_user = $django::gunicorn_user,
   $gunicorn_workers = $::processorcount * 2,
+  $gunicorn_bind = "unix:/run/gunicorn/${name}.sock",
   $django = false,
   $geo = true,
 ) {
   $vhostdocroot = "$django::webroot/$vhostname"
   $projectdir = "$django::webroot/$vhostname/$name"
   $venvdir = "${vhostdocroot}/env"
-  $socket = "unix:/run/gunicorn/${name}.sock"
 
   $dbname = $name
   $dbusername = $dbuser ? {
@@ -51,6 +51,10 @@ define django::app (
       ensure => $ensure,
       proxy => "http://${name}_app",
     }
+    nginx::resource::upstream {"${name}_app":
+      ensure => $ensure,
+      members => [$gunicorn_bind],
+    }
   }
   nginx::resource::location {"${vhostname}-static":
     ensure => $ensure,
@@ -74,12 +78,6 @@ define django::app (
     ssl => $ssl,
     ssl_only => $ssl_only,
   }
-  nginx::resource::upstream {"${name}_app":
-    ensure => $ensure,
-    members => [
-      $socket,
-    ],
-  }
 
   # Cannot use python::pip here due to the requirement for uniquely named
   # resources and no available package name parameter for python::pip.
@@ -94,7 +92,7 @@ define django::app (
     virtualenv => $venvdir,
     mode => 'wsgi',
     dir => "${vhostdocroot}/${name}",
-    bind => $socket,
+    bind => $gunicorn_bind,
     template => 'django/gunicorn.erb',
   }
   if $django {
