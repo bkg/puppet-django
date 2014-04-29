@@ -9,6 +9,8 @@ define django::app (
   $ensure = present,
   $staticdir = undef,
   $mediadir = undef,
+  $ssl = false,
+  $ssl_only = false,
   $dbuser = undef,
   $dbpass = '',
   $owner = $django::owner,
@@ -52,21 +54,25 @@ define django::app (
   }
   nginx::resource::location {"${vhostname}-static":
     ensure => $ensure,
+    location => '/static/',
     location_alias => $staticdir ? {
       undef => "$projectdir/$name/static/public/",
       default => $staticdir
     },
-    location => '/static/',
     vhost => $vhostname,
+    ssl => $ssl,
+    ssl_only => $ssl_only,
   }
   nginx::resource::location {"${vhostname}-media":
     ensure => $ensure,
+    location => '/media/',
     location_alias => $mediadir ? {
       undef => "$projectdir/$name/media/",
       default => $mediadir
     },
-    location => '/media/',
     vhost => $vhostname,
+    ssl => $ssl,
+    ssl_only => $ssl_only,
   }
   nginx::resource::upstream {"${name}_app":
     ensure => $ensure,
