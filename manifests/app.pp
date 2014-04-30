@@ -17,6 +17,7 @@ define django::app (
   $group = $django::group,
   $pythonversion = $django::pythonversion,
   $wsgiapp = "${name}.wsgi:application",
+  $nginx_proxy = "${name}_app",
   $gunicorn_user = $django::gunicorn_user,
   $gunicorn_workers = $::processorcount * 2,
   $gunicorn_bind = "unix:/run/gunicorn/${name}.sock",
@@ -49,9 +50,11 @@ define django::app (
   if !defined(Nginx::Resource::Vhost[$vhostname]) {
     nginx::resource::vhost {$vhostname:
       ensure => $ensure,
-      proxy => "http://${name}_app",
+      proxy => "http://$nginx_proxy",
     }
-    nginx::resource::upstream {"${name}_app":
+  }
+  if !defined(Nginx::Resource::Upstream[$nginx_proxy]) {
+    nginx::resource::upstream {"$nginx_proxy":
       ensure => $ensure,
       members => [$gunicorn_bind],
     }
