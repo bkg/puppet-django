@@ -4,7 +4,7 @@ class django (
   $owner = 'root',
   $group = 'root',
   $pythonversion = '2.7',
-  $postgis = true,
+  $postgis = $django::params::postgis_name,
   $nginx_workers = $::processorcount,
   $webroot = $django::params::webroot,
   $gunicorn_user = $django::params::gunicorn_user,
@@ -34,8 +34,6 @@ class django (
     ensure => $ensure,
     mode => '0644',
   }
-  # Use the defaults, local ident access only for postgres superuser.
-  include postgresql::server
   if $postgis {
     include django::postgis
   }
