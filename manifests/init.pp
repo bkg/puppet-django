@@ -21,18 +21,7 @@ class django (
   class { 'python':
     dev => true,
     virtualenv => true,
-    gunicorn => true,
     pip => true,
-  }
-  file { $gunicorn_helper:
-    ensure => $ensure,
-    mode => '0755',
-    source => 'puppet:///modules/django/gunicorn-debian',
-  }
-  file { '/etc/default/gunicorn':
-    content => "HELPER=$gunicorn_helper\n",
-    ensure => $ensure,
-    mode => '0644',
   }
   if $postgis {
     include django::postgis

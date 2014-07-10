@@ -90,13 +90,12 @@ define django::app (
     user => $owner,
     require => File[$projectdir],
   } ->
-  python::gunicorn { $name:
-    ensure => $ensure,
-    virtualenv => $venvdir,
-    mode => 'wsgi',
-    dir => "${vhostdocroot}/${name}",
-    bind => $gunicorn_bind,
-    template => 'django/gunicorn.erb',
+  supervisor::service { "$name-gunicorn":
+    ensure => present,
+    command => "$venvdir/bin/gunicorn -u $gunicorn_user -g $gunicorn_user --workers $gunicorn_workers --env DJANGO_SETTINGS_MODULE=${name}.settings --bind $gunicorn_bind $wsgiapp",
+    directory => $projectdir,
+    autorestart => true,
+    redirect_stderr => true,
   }
   if $django {
     exec { "django-$name":
