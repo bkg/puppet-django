@@ -9,7 +9,7 @@ class django::params {
   $postgis_version = $::lsbdistcodename ? {
     /(?i-mx:wheezy)/ => '1.5',
     /(?i-mx:jessie)/ => '2.1',
-    default => '2.0'
+    default => '2.1'
   }
   $postgis_name = "postgresql-$postgresql::params::version-postgis-$postgis_version"
 }
