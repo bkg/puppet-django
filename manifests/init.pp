@@ -9,8 +9,6 @@ class django (
   $webroot = $django::params::webroot,
   $gunicorn_user = $django::params::gunicorn_user,
 ) inherits django::params {
-  $gunicorn_helper = '/usr/local/sbin/gunicorn-debian'
-
   File {
     owner => $owner,
     group => $group,
