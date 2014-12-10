@@ -2,7 +2,7 @@
 
 This module builds on a few great modules to provide a Django application
 stack with PostgreSQL/PostGIS, Nginx, Gunicorn, and Virtualenv. It has been
-primarily tested on Ubuntu Server 12.04 but should work with Debian as well.
+primarily tested on Ubuntu Server 14.04 but should work with Debian as well.
 
 # Quick Start
 
