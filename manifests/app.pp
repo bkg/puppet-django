@@ -20,7 +20,7 @@ define django::app (
   $nginx_proxy = "${name}_app",
   $gunicorn_user = $django::gunicorn_user,
   $gunicorn_workers = $::processorcount * 2,
-  $gunicorn_bind = "unix:/run/gunicorn/${name}.sock",
+  $gunicorn_bind = "unix:/run/gunicorn-${name}.sock",
   $django = false,
   $geo = true,
 ) {
