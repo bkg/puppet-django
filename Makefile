@@ -19,13 +19,11 @@ $(prefix)/nginx:
 	git clone https://github.com/jfryman/puppet-nginx.git $@ && \
 		git --git-dir=$@/.git --work-tree=$@ checkout 17d1edaf74
 
-# Use fork until https://github.com/plathrop/puppet-module-supervisor/pull/72
-# is merged.
 $(prefix)/supervisor:
-	git clone https://github.com/bkg/puppet-module-supervisor.git $@
+	git clone https://github.com/plathrop/puppet-module-supervisor.git $@
 
 # Checkout git based dependencies.
-checkouts: $(prefix)/python $(prefix)/nginx
+checkouts: $(prefix)/python $(prefix)/nginx $(prefix)/supervisor
 
 build: depends checkouts
 
