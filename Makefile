@@ -12,18 +12,11 @@ depends:
 			puppet module install "$$pkgname" --version "$${dep##*,}" --modulepath $(prefix); \
 	done
 
-$(prefix)/python:
-	git clone https://github.com/stankevich/puppet-python.git $@
-
-$(prefix)/nginx:
-	git clone https://github.com/jfryman/puppet-nginx.git $@ && \
-		git --git-dir=$@/.git --work-tree=$@ checkout 17d1edaf74
-
 $(prefix)/supervisor:
 	git clone https://github.com/plathrop/puppet-module-supervisor.git $@
 
 # Checkout git based dependencies.
-checkouts: $(prefix)/python $(prefix)/nginx $(prefix)/supervisor
+checkouts: $(prefix)/supervisor
 
 build: depends checkouts
 
