@@ -48,9 +48,24 @@ define django::app (
   }
 
   if !defined(Nginx::Resource::Vhost[$vhostname]) {
-    nginx::resource::vhost {$vhostname:
-      ensure => $ensure,
-      proxy => "http://$nginx_proxy",
+    if $ssl {
+      nginx::resource::vhost {$vhostname:
+        ensure => $ensure,
+        proxy => "http://$nginx_proxy",
+        proxy_set_header => concat(
+          $nginx::params::nx_proxy_set_header,
+          ['X-Forwarded-Proto $scheme']
+        ),
+        rewrite_to_https => true,
+        ssl => $ssl,
+        ssl_cert => "${nginx::params::nx_conf_dir}/${vhostname}.crt",
+        ssl_key => "${nginx::params::nx_conf_dir}/${vhostname}.key",
+      }
+    } else {
+      nginx::resource::vhost {$vhostname:
+        ensure => $ensure,
+        proxy => "http://$nginx_proxy",
+      }
     }
   }
   if !defined(Nginx::Resource::Upstream[$nginx_proxy]) {
