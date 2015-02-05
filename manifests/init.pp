@@ -14,7 +14,16 @@ class django (
     group => $group,
   }
   if !defined(Class['nginx']) {
-    class { 'nginx': worker_processes => $nginx_workers }
+    # Declare params first so we can append to default proxy headers.
+    class { 'nginx::params': } ->
+    class { 'nginx':
+      proxy_set_header => concat(
+        $nginx::params::nx_proxy_set_header,
+        ['X-Forwarded-Proto $scheme']
+      ),
+      server_tokens => off,
+      worker_processes => $nginx_workers,
+    }
   }
   class { 'python':
     dev => true,

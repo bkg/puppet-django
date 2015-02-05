@@ -52,10 +52,6 @@ define django::app (
       nginx::resource::vhost {$vhostname:
         ensure => $ensure,
         proxy => "http://$nginx_proxy",
-        proxy_set_header => concat(
-          $nginx::params::nx_proxy_set_header,
-          ['X-Forwarded-Proto $scheme']
-        ),
         rewrite_to_https => true,
         ssl => $ssl,
         ssl_cert => "${nginx::params::nx_conf_dir}/${vhostname}.crt",
