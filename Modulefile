@@ -1,5 +1,5 @@
 name 'bkg-django'
-version '0.4.0'
+version '0.4.1'
 source 'https://github.com/bkg/puppet-django.git'
 author 'Brian Galey'
 license 'Apache License, Version 2.0'
