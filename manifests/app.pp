@@ -56,6 +56,7 @@ define django::app (
         ssl => $ssl,
         ssl_cert => "${nginx::params::nx_conf_dir}/${vhostname}.crt",
         ssl_key => "${nginx::params::nx_conf_dir}/${vhostname}.key",
+        ssl_protocols => 'TLSv1 TLSv1.1 TLSv1.2',
       }
     } else {
       nginx::resource::vhost {$vhostname:
