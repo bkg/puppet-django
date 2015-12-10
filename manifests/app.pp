@@ -106,8 +106,6 @@ define django::app (
     ensure => present,
     command => "$venvdir/bin/gunicorn -u $gunicorn_user -g $gunicorn_user --workers $gunicorn_workers --env DJANGO_SETTINGS_MODULE=${name}.settings --bind $gunicorn_bind $wsgiapp",
     directory => $projectdir,
-    user => $gunicorn_user,
-    group => $gunicorn_user,
     autorestart => true,
     redirect_stderr => true,
   }
