@@ -37,8 +37,7 @@ define django::app (
   # This runs mkdir -p as $owner so let it run as root and fix up ownership
   # after the fact.
   python::virtualenv { $venvdir: version => $pythonversion } ~>
-  django::chown { "$vhostname-venv-perms":
-    dir => $vhostdocroot,
+  django::chown { $vhostdocroot:
     owner => $owner,
     group => $group,
   } ->
@@ -109,6 +108,11 @@ define django::app (
     directory => $projectdir,
     autorestart => true,
     redirect_stderr => true,
+  } ->
+  # Fix log dir ownership so gunicorn workers can write to it.
+  django::chown { "/var/log/supervisor/$name":
+    owner => $owner,
+    group => $group,
   }
   if $django {
     exec { "django-$name":

@@ -2,11 +2,10 @@
 # when interfacing with third party modules. Permissions and ownership are
 # a struggle to override with Puppet, so fix things up with this resource.
 define django::chown (
-  $dir,
   $owner,
-  $group
+  $group,
 ) {
-  exec { "chown -R ${owner}:${group} $dir":
-    unless => "test $(stat -c %U%G $dir) = ${owner}${group}",
+  exec { "chown -R ${owner}:${group} $name":
+    unless => "test $(stat -c %U%G $name) = ${owner}${group}",
   }
 }
