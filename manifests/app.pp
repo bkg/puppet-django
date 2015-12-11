@@ -110,7 +110,7 @@ define django::app (
     redirect_stderr => true,
   } ->
   # Fix log dir ownership so gunicorn workers can write to it.
-  django::chown { "/var/log/supervisor/$name":
+  django::chown { "/var/log/supervisor/$name-gunicorn":
     owner => $owner,
     group => $group,
   }
