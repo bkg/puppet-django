@@ -4,11 +4,14 @@ class django (
   $owner = 'root',
   $group = 'root',
   $pythonversion = '2.7',
-  $postgis = $django::params::postgis_name,
+  $postgis = true,
   $nginx_workers = $::processorcount,
   $webroot = $django::params::webroot,
   $gunicorn_user = $django::params::gunicorn_user,
 ) inherits django::params {
+
+  require postgresql::server
+
   File {
     owner => $owner,
     group => $group,
@@ -31,6 +34,6 @@ class django (
     pip => true,
   }
   if $postgis {
-    include django::postgis
+    include postgresql::server::postgis
   }
 }
