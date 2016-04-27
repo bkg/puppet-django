@@ -9,9 +9,6 @@ class django (
   $webroot = $django::params::webroot,
   $gunicorn_user = $django::params::gunicorn_user,
 ) inherits django::params {
-
-  require postgresql::server
-
   File {
     owner => $owner,
     group => $group,
@@ -32,6 +29,9 @@ class django (
     dev => true,
     virtualenv => true,
     pip => true,
+  }
+  if !defined(Class['Postgresql::Server']) {
+    include postgresql::server
   }
   if $postgis {
     include postgresql::server::postgis
