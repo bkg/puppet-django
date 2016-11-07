@@ -21,6 +21,7 @@ define django::app (
   $gunicorn_user = $django::gunicorn_user,
   $gunicorn_workers = $::processorcount * 2,
   $gunicorn_bind = "unix:/run/gunicorn-${name}.sock",
+  $gunicorn_args_append = '',
   $django = false,
   $geo = true,
 ) {
@@ -104,7 +105,7 @@ define django::app (
   } ->
   supervisor::service { "$name-gunicorn":
     ensure => present,
-    command => "$venvdir/bin/gunicorn -u $gunicorn_user -g $gunicorn_user --workers $gunicorn_workers --env DJANGO_SETTINGS_MODULE=${name}.settings --bind $gunicorn_bind $wsgiapp",
+    command => "$venvdir/bin/gunicorn -u $gunicorn_user -g $gunicorn_user --workers $gunicorn_workers --env DJANGO_SETTINGS_MODULE=${name}.settings --bind $gunicorn_bind $gunicorn_args_append $wsgiapp",
     directory => $projectdir,
     autorestart => true,
     redirect_stderr => true,
